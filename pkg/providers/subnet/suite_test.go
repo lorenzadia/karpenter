@@ -180,15 +180,15 @@ var _ = Describe("Subnet Provider", func() {
 			"subnet-test2 (test-zone-1b)",
 		))
 	})
-	It("should note that all subnets are private", func() {
-		nodeTemplate.Spec.SubnetSelector = map[string]string{"aws-ids": "subnet-test2", "foo": "bar"}
+	It("should note that no subnets assign a public IPv4 address to EC2 instances on launch", func() {
+		nodeTemplate.Spec.SubnetSelector = map[string]string{"Name": "test-subnet-1,test-subnet-3"}
 		ExpectApplied(ctx, env.Client, provisioner, nodeTemplate)
 		onlyPrivate, err := awsEnv.SubnetProvider.OnlyPrivateSubnets(ctx, nodeTemplate)
 		Expect(err).To(BeNil())
-		Expect(onlyPrivate).To(BeFalse())
+		Expect(onlyPrivate).To(BeTrue())
 	})
-	It("should note that all subnets are public", func() {
-		nodeTemplate.Spec.SubnetSelector = map[string]string{"aws-ids": "subnet-test2", "foo": "bar"}
+	It("should note that at least one subnet assigns a public IPv4 address to EC2 instances on launch", func() {
+		nodeTemplate.Spec.SubnetSelector = map[string]string{"aws-ids": "subnet-test2"}
 		ExpectApplied(ctx, env.Client, provisioner, nodeTemplate)
 		onlyPrivate, err := awsEnv.SubnetProvider.OnlyPrivateSubnets(ctx, nodeTemplate)
 		Expect(err).To(BeNil())
