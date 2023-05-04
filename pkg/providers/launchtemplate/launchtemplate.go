@@ -151,21 +151,21 @@ func (p *Provider) createAMIOptions(ctx context.Context, nodeTemplate *v1alpha1.
 	if len(securityGroupsIDs) == 0 {
 		return nil, fmt.Errorf("no security groups exist given constraints")
 	}
-	onlyPrivateSubnets, err := p.subnetProvider.OnlyPrivateSubnets(ctx, nodeTemplate) // this is where the privatesubet setting is set
+	associatePublicIpv4Addrs, err := p.subnetProvider.AssociatePublicIpv4Addrs(ctx, nodeTemplate)
 	if err != nil {
 		return nil, err
 	}
 	return &amifamily.Options{
-		ClusterName:             settings.FromContext(ctx).ClusterName,
-		ClusterEndpoint:         p.ClusterEndpoint,
-		AWSENILimitedPodDensity: settings.FromContext(ctx).EnableENILimitedPodDensity,
-		InstanceProfile:         instanceProfile,
-		SecurityGroupsIDs:       securityGroupsIDs,
-		Tags:                    tags,
-		Labels:                  labels,
-		CABundle:                p.caBundle,
-		KubeDNSIP:               p.KubeDNSIP,
-		PrivateSubnets:          onlyPrivateSubnets,
+		ClusterName:              settings.FromContext(ctx).ClusterName,
+		ClusterEndpoint:          p.ClusterEndpoint,
+		AWSENILimitedPodDensity:  settings.FromContext(ctx).EnableENILimitedPodDensity,
+		InstanceProfile:          instanceProfile,
+		SecurityGroupsIDs:        securityGroupsIDs,
+		Tags:                     tags,
+		Labels:                   labels,
+		CABundle:                 p.caBundle,
+		KubeDNSIP:                p.KubeDNSIP,
+		AssociatePublicIpV4Addrs: associatePublicIpv4Addrs,
 	}, nil
 }
 
