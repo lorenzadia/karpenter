@@ -252,7 +252,6 @@ func (p *Provider) generateNetworkInterface(ctx context.Context, nodeTemplate *v
 	if err != nil {
 		return nil, err
 	}
-
 	if !associatePublicIPv4Addrs {
 		return []*ec2.LaunchTemplateInstanceNetworkInterfaceSpecificationRequest{{AssociatePublicIpAddress: aws.Bool(false)}}, nil
 	}
